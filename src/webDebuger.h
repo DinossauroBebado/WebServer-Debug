@@ -21,9 +21,9 @@ String header;
 
 // Auxiliar variables to store the current output state
 int n = 2;
-int outputState[] = {0,1,2};
 
-char variNames[31][32] = {"VAR 0","VAR 1","VAR 2"};
+
+// char variNames[31][32] = {"VAR 0","VAR 1","VAR 2"};
 
 
 
@@ -36,8 +36,21 @@ unsigned long previousTime = 0;
 // Define timeout time in milliseconds (example: 2000ms = 2s)
 const long timeoutTime = 2000;
 
-void setupWebDebuger() {
+void setupWebDebuger(bool ap) {
   
+
+  if(ap==true){
+    // Connect to Wi-Fi network with SSID and password
+    Serial.print("Setting AP (Access Point)…");
+    // Remove the password parameter, if you want the AP (Access Point) to be open
+    WiFi.softAP(ssid, password);
+    IPAddress IP = WiFi.softAPIP();
+    Serial.print("AP IP address: ");
+    Serial.println(IP);
+    server.begin();
+
+  }else{
+
   // Connect to Wi-Fi network with SSID and password
   Serial.print("Connecting to ");
   Serial.println(ssid);
@@ -52,9 +65,10 @@ void setupWebDebuger() {
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
   server.begin();
+  }
 }
 
-void loopDebuger(){
+void loopDebuger(int outputState[],char variNames[31][32]){
   WiFiClient client = server.available();   // Listen for incoming clients
 
   if (client) {                             // If a new client connects,
@@ -93,7 +107,7 @@ void loopDebuger(){
             // Web Page Heading
             client.println("<body><h1>ESP32 Web Server</h1>");
             
-
+      
             for(int i=0;i<=n;i++){
 
             client.println(String("<p class=\"button button\">") + String(variNames[i])+ String(" : ")  + String(outputState[i]) + String("</p>"));
