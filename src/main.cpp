@@ -10,7 +10,7 @@ int var = 0;
 void setup() {
 
 Serial.begin(115200);
-setupWebDebuger(true);
+setupWebDebuger(false);
 outputState[0] = 0 ;
 outputState[1] = 1 ;
   
